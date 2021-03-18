@@ -13,7 +13,7 @@ galleryImages.insertAdjacentHTML('afterbegin', GaleryItem)
 
 let currentImgIndex = null;
 
-const createGaleryItems = (gallery) => {
+function createGaleryItems(gallery) {
   return gallery.map(({ preview, original, description }, index) => {
     return `
     <li class="gallery__item">
@@ -40,7 +40,7 @@ lightboxBtn.addEventListener('click', onCloseModal);
 lightBoxOverlay.addEventListener('click', onClicklightBoxOverlay);
 
 
-const onOpenModal = (e) => {
+function onOpenModal(e) {
   e.preventDefault();
   window.addEventListener('keydown', onEscKeyPress)
 
@@ -52,10 +52,11 @@ const onOpenModal = (e) => {
       lightboxImg.src = e.target.dataset.source;
       lightboxImg.alt = e.target.alt;
       
-      currentImgIndex = + e.target.dataset.index;
+      currentImgIndex = +e.target.dataset.index;
+    
  }
 
- const onCloseModal = () => {
+ function onCloseModal () {
   window.removeEventListener('keydown', onEscKeyPress)
   lightbox.classList.remove("is-open");
   lightboxImg.src = '';
@@ -63,28 +64,36 @@ const onOpenModal = (e) => {
 };
 
 
-const onClicklightBoxOverlay = (e) => {
+function onClicklightBoxOverlay (e) {
 if (e.currentTarget === e.target){
   onCloseModal () 
 }
 }
 
-const onEscKeyPress = (e) => {
+function onEscKeyPress (e){
   const ESC_KEY_CODE = 'Escape';
   if (e.code === ESC_KEY_CODE){
     onCloseModal () 
   }
 
   if (e.code === 'ArrowRight'){
+    if (currentImgIndex === gallery.length -1){
+      currentImgIndex = 0
+    } else {
     currentImgIndex = currentImgIndex +1
+    }
     lightboxImg.src = gallery[currentImgIndex].original
-    
+
   }
 
    if (e.code === 'ArrowLeft'){
+     if(currentImgIndex === 0){
+      currentImgIndex = gallery.length -1
+     } else {
     currentImgIndex = currentImgIndex -1
-    
+     }
     lightboxImg.src = gallery[currentImgIndex].original
+
   }
 
 }
