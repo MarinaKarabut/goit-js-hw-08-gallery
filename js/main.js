@@ -8,12 +8,12 @@ const lightboxBtn = document.querySelector('[data-action="close-lightbox"]');
 const lightBoxOverlay = document.querySelector('.lightbox__overlay')
 
 
-const GaleryItem = createGaleryItems(gallery)
-galleryImages.insertAdjacentHTML('afterbegin', GaleryItem)
+const galleryItem = createGalleryItems(gallery)
+galleryImages.insertAdjacentHTML('afterbegin', galleryItem)
 
 let currentImgIndex = null;
 
-function createGaleryItems(gallery) {
+function createGalleryItems(gallery) {
   return gallery.map(({ preview, original, description }, index) => {
     return `
     <li class="gallery__item">
@@ -36,14 +36,16 @@ function createGaleryItems(gallery) {
 }
 
 galleryImages.addEventListener('click', onOpenModal)
-lightboxBtn.addEventListener('click', onCloseModal);
-lightBoxOverlay.addEventListener('click', onClicklightBoxOverlay);
+
 
 
 function onOpenModal(e) {
   e.preventDefault();
   window.addEventListener('keydown', onEscKeyPress)
-
+  window.addEventListener('keydown', onClickArrowRight)
+  window.addEventListener('keydown', onClickArrowLeft)
+  lightboxBtn.addEventListener('click', onCloseModal);
+  lightBoxOverlay.addEventListener('click', onClicklightBoxOverlay);
     if (e.target.nodeName !== 'IMG') {
       return;
     }
@@ -58,6 +60,10 @@ function onOpenModal(e) {
 
  function onCloseModal () {
   window.removeEventListener('keydown', onEscKeyPress)
+  window.removeEventListener('keydown', onClickArrowRight)
+  window.removeEventListener('keydown', onClickArrowLeft)
+  lightboxBtn.removeEventListener('click', onCloseModal);
+  lightBoxOverlay.removeEventListener('click', onClicklightBoxOverlay);
   lightbox.classList.remove("is-open");
   lightboxImg.src = '';
   lightboxImg.alt = '';
@@ -70,13 +76,19 @@ if (e.currentTarget === e.target){
 }
 }
 
+
+
 function onEscKeyPress (e){
   const ESC_KEY_CODE = 'Escape';
   if (e.code === ESC_KEY_CODE){
     onCloseModal () 
-  }
+  } 
+}
 
-  if (e.code === 'ArrowRight'){
+
+function onClickArrowRight (e){
+
+ if (e.code === 'ArrowRight'){
     if (currentImgIndex === gallery.length -1){
       currentImgIndex = 0
     } else {
@@ -86,7 +98,11 @@ function onEscKeyPress (e){
 
   }
 
-   if (e.code === 'ArrowLeft'){
+
+}
+
+ function onClickArrowLeft(e) {
+ if (e.code === 'ArrowLeft'){
      if(currentImgIndex === 0){
       currentImgIndex = gallery.length -1
      } else {
@@ -98,4 +114,7 @@ function onEscKeyPress (e){
 
 }
 
+
+ 
+  
 
